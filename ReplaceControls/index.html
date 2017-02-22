@@ -53,10 +53,8 @@ height="150"></video>
     });
     fullscreenButton.addEventListener("click", function(){
       if(myPlayer.isFullscreen()){
-        myPlayer.isFullscreen(false);
         myPlayer.exitFullscreen();
       }else{
-        myPlayer.isFullscreen(true);
         myPlayer.requestFullscreen();
       }
     });
