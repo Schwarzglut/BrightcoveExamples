@@ -1,5 +1,90 @@
-<html>
-<!DOCTYPE html5>
-<head></head>
-<body></body>
-</html>
+<head>
+  <title>Replaced Controls</title>
+  <style>
+  #controlBar{
+    height: 50px;
+    width: 150px;
+    position: absolute;
+  }
+  </style>
+</head>
+
+<video id="controlBarTest" data-video-id="5212494788001"
+data-account="5212570417001"
+data-player="default"
+data-embed="default"
+data-application-id
+class="video-js"
+controls
+width="300"
+height="150"></video>
+<script src="//players.brightcove.net/5212570417001/default_default/index.min.js"></script>
+<script>
+  videojs.plugin('newControls', function(){
+    // Variable declaration
+    var myPlayer = this,
+    playButton,
+    fullscreenButton,
+    muteButton,
+    scrubberButton;
+
+    // Create replacement buttons for controls
+    playButton = document.createElement('button');
+    playButton.innerHTML = "Play";
+    fullscreenButton = document.createElement('button');
+    fullscreenButton.innerHTML = "#";
+    muteButton = document.createElement('button');
+    muteButton.innerHTML = "Volume";
+    // Replacement scrubber is an input element of type range
+    var videoLengthInSeconds = myPlayer.duration();
+    scrubberButton = document.createElement('input');
+    scrubberButton.setAttribute("type", "range");
+    scrubberButton.setAttribute("mix", "0");
+    scrubberButton.setAttribute("max", videoLengthInSeconds);
+    scrubberButton.setAttribute("step", "1");
+
+    // Add events listeners for buttons to act like controls
+    playButton.addEventListener("click", function(){
+      if(myPlayer.paused()){
+        myPlayer.play();
+      }else {
+        myPlayer.pause();
+      }
+    });
+    fullscreenButton.addEventListener("click", function(){
+      if(myPlayer.isFullscreen()){
+        myPlayer.isFullscreen(false);
+        myPlayer.exitFullscreen();
+      }else{
+        myPlayer.isFullscreen(true);
+        myPlayer.requestFullscreen();
+      }
+    });
+    muteButton.addEventListener("click", function(){
+      if(myPlayer.muted()){
+        myPlayer.muted(false);
+      }else{
+        myPlayer.muted(true);
+      }
+    });
+    scrubberButton.addEventListener("change", function(){
+      myPlayer.currentTime(scrubberButton.value);
+    });
+    // Add buttons to the document
+    var controlBar = document.createElement("div");
+    controlBar.id = "controlBar";
+    controlBar.appendChild(playButton);
+    controlBar.appendChild(fullscreenButton);
+    controlBar.appendChild(muteButton);
+    controlBar.appendChild(scrubberButton);
+
+    // Add new control bar to the player
+    myPlayer.el().appendChild(controlBar);
+  });
+  videojs('controlBarTest').ready(function(){
+    var myPlayer = this;
+    myPlayer.on("loadedmetadata", function(){
+      myPlayer.newControls();
+    });
+  });
+</script>
