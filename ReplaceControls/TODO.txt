@@ -1,0 +1,8 @@
+TO-DO:
+
+1. Set the scrubber to default at zero
+2. Style buttons
+3. Remove default controls from appearing - DONE
+4. Make volume slider
+5. Change test video to one with sound
+6. Change test video to a longer one
