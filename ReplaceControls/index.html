@@ -19,7 +19,9 @@ width="300"
 height="150"></video>
 <script src="//players.brightcove.net/5212570417001/default_default/index.min.js"></script>
 <script>
-  videojs.plugin('newControls', function(){
+  videojs.plugin('newControls', function(options){
+    // List out variables that grab the possiblities of 'options'
+    var hasEnded = options.hasEnded;
     // Variable declaration
     var myPlayer = this,
     playButton,
@@ -29,11 +31,17 @@ height="150"></video>
 
     // Create replacement buttons for controls
     playButton = document.createElement('button');
-    playButton.innerHTML = "Play";
     fullscreenButton = document.createElement('button');
-    fullscreenButton.innerHTML = "#";
     muteButton = document.createElement('button');
-    muteButton.innerHTML = "Volume";
+    // Assigning classes from source: https://github.com/videojs/font/blob/master/css/videojs-icons.css
+    // Check if auto-play is enabled to determine whether to set play or pause icon
+    if(myPlayer.autoplay()){
+      playButton.className = "vjs-icon-pause";
+    }else{
+      playButton.className = "vjs-icon-play";
+    }
+    fullscreenButton.className = "vjs-icon-fullscreen-enter";
+    muteButton.className = "vjs-icon-volume-high";
     // Replacement scrubber is an input element of type range
     var videoLengthInSeconds = myPlayer.duration();
     scrubberButton = document.createElement('input');
@@ -46,22 +54,28 @@ height="150"></video>
     playButton.addEventListener("click", function(){
       if(myPlayer.paused()){
         myPlayer.play();
+        playButton.className = "vjs-icon-play";
       }else {
         myPlayer.pause();
+        playButton.className = "vjs-icon-pause";
       }
     });
     fullscreenButton.addEventListener("click", function(){
       if(myPlayer.isFullscreen()){
         myPlayer.exitFullscreen();
+        fullscreenButton.className = "vjs-icon-fullscreen-exit";
       }else{
         myPlayer.requestFullscreen();
+        fullscreenButton.className = "vjs-icon-fullscreen-enter";
       }
     });
     muteButton.addEventListener("click", function(){
       if(myPlayer.muted()){
         myPlayer.muted(false);
+        muteButton.className = "vjs-icon-volume-high";
       }else{
         myPlayer.muted(true);
+        muteButton.className = "vjs-icon-volume-mute";
       }
     });
     scrubberButton.addEventListener("change", function(){
@@ -77,11 +91,20 @@ height="150"></video>
 
     // Add new control bar to the player
     myPlayer.el().appendChild(controlBar);
+
+    // Check options
+    if(options){
+      playButton.className = "vjs-icon-play";
+    }
   });
   videojs('controlBarTest').ready(function(){
     var myPlayer = this;
     myPlayer.on("loadedmetadata", function(){
       myPlayer.newControls();
+    });
+    myPlayer.on("ended", function(){
+      console.log("Ended");
+      myPlayer.newControls({"hasEnded": true}});
     });
   });
 </script>

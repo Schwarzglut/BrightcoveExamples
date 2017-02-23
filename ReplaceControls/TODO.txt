@@ -6,3 +6,4 @@ TO-DO:
 4. Make volume slider
 5. Change test video to one with sound
 6. Change test video to a longer one
+7. Make the control bar display when not in focus
