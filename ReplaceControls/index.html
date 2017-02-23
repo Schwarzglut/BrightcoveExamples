@@ -63,10 +63,12 @@ height="150"></video>
     scrubberButton.setAttribute("mix", "0");
     scrubberButton.setAttribute("max", videoLengthInSeconds);
     scrubberButton.setAttribute("step", "1");
+    scrubberButton.setAttribute("value", "0");
 
     scrubberButton.classList.add("scrubber");
 
     // Add events listeners for buttons to act like controls
+    // PLAY LISTENER
     playButton.addEventListener("click", function(){
       if(myPlayer.paused()){
         myPlayer.play();
@@ -78,6 +80,7 @@ height="150"></video>
         playButton.classList.add("vjs-icon-play");
       }
     });
+    // FULLSCREEN LISTENER
     fullscreenButton.addEventListener("click", function(){
       if(myPlayer.isFullscreen()){
         myPlayer.exitFullscreen();
@@ -89,6 +92,7 @@ height="150"></video>
         fullscreenButton.classList.remove("vjs-icon-fullscreen-enter");
       }
     });
+    // MUTE LISTENER
     muteButton.addEventListener("click", function(){
       if(myPlayer.muted()){
         myPlayer.muted(false);
@@ -98,6 +102,7 @@ height="150"></video>
         muteButton.className = "vjs-icon-volume-mute";
       }
     });
+    // SCRUBBER BUTTON
     scrubberButton.addEventListener("change", function(){
       myPlayer.currentTime(scrubberButton.value);
     });

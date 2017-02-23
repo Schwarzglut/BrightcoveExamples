@@ -1,9 +1,10 @@
 TO-DO:
 
-1. Set the scrubber to default at zero
-2. Style buttons
+1. Set the scrubber to default at zero - DONE
+2. Style buttons - DONE
 3. Remove default controls from appearing - DONE
 4. Make volume slider
 5. Change test video to one with sound
 6. Change test video to a longer one
 7. Make the control bar display when not in focus
+8. Make scrubber follow current time
