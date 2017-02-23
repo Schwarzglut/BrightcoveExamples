@@ -33,6 +33,9 @@ height="150"></video>
     button.classList.add("vjs-icon-play");
     button.classList.remove("vjs-icon-pause");
   }
+  function updateScrubber(scrubber){
+    scrubber.value = myPlayer.currentTime();
+  }
   videojs.plugin('newControls', function(callback){
     // Variable declaration
     var myPlayer = this;
@@ -125,5 +128,6 @@ height="150"></video>
     myPlayer.on("ended", function(){
       resetPlay(playButton);
     });
+    updateScrubber();
   });
 </script>
