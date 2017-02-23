@@ -2,9 +2,14 @@
   <title>Replaced Controls</title>
   <style>
   #controlBar{
-    height: 50px;
-    width: 150px;
     position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+  .scrubber{
+    float: right;
+    width: 100%
   }
   </style>
 </head>
@@ -19,29 +24,38 @@ width="300"
 height="150"></video>
 <script src="//players.brightcove.net/5212570417001/default_default/index.min.js"></script>
 <script>
-  videojs.plugin('newControls', function(options){
-    // List out variables that grab the possiblities of 'options'
-    var hasEnded = options.hasEnded;
+  var playButton,
+  fullscreenButton,
+  muteButton,
+  scrubberButton,
+  controlBar;
+  function resetPlay(button){
+    button.classList.add("vjs-icon-play");
+    button.classList.remove("vjs-icon-pause");
+  }
+  videojs.plugin('newControls', function(callback){
     // Variable declaration
-    var myPlayer = this,
-    playButton,
-    fullscreenButton,
-    muteButton,
-    scrubberButton;
+    var myPlayer = this;
 
     // Create replacement buttons for controls
     playButton = document.createElement('button');
     fullscreenButton = document.createElement('button');
     muteButton = document.createElement('button');
+    // Assign the buttons with ID's
+    playButton.id = "playButton";
+    fullscreenButton.id = "fullscreenButton";
+    muteButton.id = "muteButton";
     // Assigning classes from source: https://github.com/videojs/font/blob/master/css/videojs-icons.css
     // Check if auto-play is enabled to determine whether to set play or pause icon
     if(myPlayer.autoplay()){
-      playButton.className = "vjs-icon-pause";
+      playButton.classList.add("vjs-icon-pause");
+      playButton.classList.remove("vjs-icon-play");
     }else{
-      playButton.className = "vjs-icon-play";
+      playButton.classList.remove("vjs-icon-pause");
+      playButton.classList.add("vjs-icon-play");
     }
-    fullscreenButton.className = "vjs-icon-fullscreen-enter";
-    muteButton.className = "vjs-icon-volume-high";
+    fullscreenButton.classList.add("vjs-icon-fullscreen-enter");
+    muteButton.classList.add("vjs-icon-volume-high");
     // Replacement scrubber is an input element of type range
     var videoLengthInSeconds = myPlayer.duration();
     scrubberButton = document.createElement('input');
@@ -50,23 +64,29 @@ height="150"></video>
     scrubberButton.setAttribute("max", videoLengthInSeconds);
     scrubberButton.setAttribute("step", "1");
 
+    scrubberButton.classList.add("scrubber");
+
     // Add events listeners for buttons to act like controls
     playButton.addEventListener("click", function(){
       if(myPlayer.paused()){
         myPlayer.play();
-        playButton.className = "vjs-icon-play";
+        playButton.classList.add("vjs-icon-pause");
+        playButton.classList.remove("vjs-icon-play");
       }else {
         myPlayer.pause();
-        playButton.className = "vjs-icon-pause";
+        playButton.classList.remove("vjs-icon-pause");
+        playButton.classList.add("vjs-icon-play");
       }
     });
     fullscreenButton.addEventListener("click", function(){
       if(myPlayer.isFullscreen()){
         myPlayer.exitFullscreen();
-        fullscreenButton.className = "vjs-icon-fullscreen-exit";
+        fullscreenButton.classList.remove("vjs-icon-fullscreen-exit");
+        fullscreenButton.classList.add("vjs-icon-fullscreen-enter");
       }else{
         myPlayer.requestFullscreen();
-        fullscreenButton.className = "vjs-icon-fullscreen-enter";
+        fullscreenButton.classList.add("vjs-icon-fullscreen-exit");
+        fullscreenButton.classList.remove("vjs-icon-fullscreen-enter");
       }
     });
     muteButton.addEventListener("click", function(){
@@ -91,11 +111,6 @@ height="150"></video>
 
     // Add new control bar to the player
     myPlayer.el().appendChild(controlBar);
-
-    // Check options
-    if(options){
-      playButton.className = "vjs-icon-play";
-    }
   });
   videojs('controlBarTest').ready(function(){
     var myPlayer = this;
@@ -103,8 +118,7 @@ height="150"></video>
       myPlayer.newControls();
     });
     myPlayer.on("ended", function(){
-      console.log("Ended");
-      myPlayer.newControls({"hasEnded": true}});
+      resetPlay(playButton);
     });
   });
 </script>
