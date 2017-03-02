@@ -22,6 +22,9 @@
     padding: 0;
     width: 91%;
   }
+  .hide-controlBar{
+    display: none;
+  }
   </style>
 </head>
 
@@ -135,6 +138,7 @@ height="480"></video>
     // Add controlBar to controlBarDiv
     controlBarDiv = document.createElement('div');
     controlBarDiv.id = "controlBarDiv";
+    controlBarDiv.className = "hide-controlBar";
     controlBarDiv.appendChild(controlBar);
 
     // Add new control bar to the player
@@ -151,5 +155,12 @@ height="480"></video>
     myPlayer.on("timeupdate", function(){
       updateTimer(scrubberButton, myPlayer.currentTime());
     });
+    // Make controls appear and disappear
+    myPlayer.el().onmouseover = function(){
+      controlBarDiv.classList.remove('hide-controlBar');
+    };
+    myPlayer.el().onmouseout = function(){
+      controlBarDiv.classList.add('hide-controlBar');
+    };
   });
 </script>
