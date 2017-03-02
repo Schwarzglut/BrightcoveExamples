@@ -1,15 +1,26 @@
 <head>
   <title>Replaced Controls</title>
   <style>
-  #controlBar{
+  #controlBarDiv{
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
   }
-  .scrubber{
-    float: right;
-    width: 100%
+  #controlBar{
+    position: relative;
+    display: flex;
+    width: 100%;
+  }
+  #controlBar button{
+    margin: 0;
+    padding: 0;
+    width: 3%;
+  }
+  #controlBar input{
+    margin: 0;
+    padding: 0;
+    width: 91%;
   }
   </style>
 </head>
@@ -20,21 +31,23 @@ data-player="default"
 data-embed="default"
 data-application-id
 class="video-js"
-width="300"
-height="150"></video>
+width="720"
+height="480"></video>
 <script src="//players.brightcove.net/5212570417001/default_default/index.min.js"></script>
 <script>
   var playButton,
   fullscreenButton,
   muteButton,
   scrubberButton,
-  controlBar;
+  controlBar,
+  controlBarDiv;
+
   function resetPlay(button){
     button.classList.add("vjs-icon-play");
     button.classList.remove("vjs-icon-pause");
   }
-  function updateScrubber(scrubber){
-    scrubber.value = myPlayer.currentTime();
+  function updateTimer(input, time){
+    input.value = time;
   }
   videojs.plugin('newControls', function(callback){
     // Variable declaration
@@ -62,6 +75,7 @@ height="150"></video>
     // Replacement scrubber is an input element of type range
     var videoLengthInSeconds = myPlayer.duration();
     scrubberButton = document.createElement('input');
+    scrubberButton.id = "scrubberButton"
     scrubberButton.setAttribute("type", "range");
     scrubberButton.setAttribute("mix", "0");
     scrubberButton.setAttribute("max", videoLengthInSeconds);
@@ -109,16 +123,22 @@ height="150"></video>
     scrubberButton.addEventListener("change", function(){
       myPlayer.currentTime(scrubberButton.value);
     });
-    // Add buttons to the document
+
+    // Add elements to the controlBar
     var controlBar = document.createElement("div");
     controlBar.id = "controlBar";
     controlBar.appendChild(playButton);
-    controlBar.appendChild(fullscreenButton);
     controlBar.appendChild(muteButton);
     controlBar.appendChild(scrubberButton);
+    controlBar.appendChild(fullscreenButton);
+
+    // Add controlBar to controlBarDiv
+    controlBarDiv = document.createElement('div');
+    controlBarDiv.id = "controlBarDiv";
+    controlBarDiv.appendChild(controlBar);
 
     // Add new control bar to the player
-    myPlayer.el().appendChild(controlBar);
+    myPlayer.el().appendChild(controlBarDiv);
   });
   videojs('controlBarTest').ready(function(){
     var myPlayer = this;
@@ -128,6 +148,8 @@ height="150"></video>
     myPlayer.on("ended", function(){
       resetPlay(playButton);
     });
-    updateScrubber();
+    myPlayer.on("timeupdate", function(){
+      updateTimer(scrubberButton, myPlayer.currentTime());
+    });
   });
 </script>
