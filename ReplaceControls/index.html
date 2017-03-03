@@ -34,6 +34,7 @@ data-player="default"
 data-embed="default"
 data-application-id
 class="video-js"
+controls
 width="720"
 height="480"></video>
 <script src="//players.brightcove.net/5212570417001/default_default/index.min.js"></script>
@@ -55,7 +56,6 @@ height="480"></video>
   videojs.plugin('newControls', function(callback){
     // Variable declaration
     var myPlayer = this;
-
     // Create replacement buttons for controls
     playButton = document.createElement('button');
     fullscreenButton = document.createElement('button');
@@ -144,8 +144,14 @@ height="480"></video>
     // Add new control bar to the player
     myPlayer.el().appendChild(controlBarDiv);
   });
+  videojs('controlBarTest').on('loadstart', function(){
+    var myPlayer = this;
+    myPlayer.controlBar.hide();
+  });
+  // Player Ready
   videojs('controlBarTest').ready(function(){
     var myPlayer = this;
+
     myPlayer.on("loadedmetadata", function(){
       myPlayer.newControls();
     });
