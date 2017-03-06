@@ -27,7 +27,6 @@
   }
   </style>
 </head>
-
 <video id="controlBarTest" data-video-id="5212494788001"
 data-account="5212570417001"
 data-player="default"
@@ -46,16 +45,34 @@ height="480"></video>
   controlBar,
   controlBarDiv;
 
-  function resetPlay(button){
-    button.classList.add("vjs-icon-play");
-    button.classList.remove("vjs-icon-pause");
-  }
-  function updateTimer(input, time){
-    input.value = time;
-  }
   videojs.plugin('newControls', function(callback){
     // Variable declaration
     var myPlayer = this;
+    var playButton,
+    fullscreenButton,
+    muteButton,
+    scrubberButton,
+    controlBar,
+    controlBarDiv;
+    // Hide the default contorl bar
+    myPlayer.controlBar.hide();
+    // FUNCTIONS
+    function resetPlayButton(){
+      playButton.classList.add("vjs-icon-play");
+      playButton.classList.remove("vjs-icon-pause");
+      scrubberButton.value = "0";
+    }
+    function updatePlayButton(){
+      if(playButton.classList.contains("vjs-icon-pause")){
+        playButton.classList.add("vjs-icon-play");
+        playButton.classList.remove("vjs-icon-pause");
+      }
+      else{
+        playButton.classList.remove("vjs-icon-play");
+        playButton.classList.add("vjs-icon-pause");
+      }
+    }
+
     // Create replacement buttons for controls
     playButton = document.createElement('button');
     fullscreenButton = document.createElement('button');
@@ -126,6 +143,11 @@ height="480"></video>
     scrubberButton.addEventListener("change", function(){
       myPlayer.currentTime(scrubberButton.value);
     });
+    // If video is played through the big play button then change the play button icon.
+    myPlayer.bigPlayButton.el().addEventListener("click", function(){
+      playButton.classList.add("vjs-icon-pause");
+      playButton.classList.remove("vjs-icon-play");
+    });
 
     // Add elements to the controlBar
     var controlBar = document.createElement("div");
@@ -140,33 +162,36 @@ height="480"></video>
     controlBarDiv.id = "controlBarDiv";
     controlBarDiv.className = "hide-controlBar";
     controlBarDiv.appendChild(controlBar);
-
     // Add new control bar to the player
     myPlayer.el().appendChild(controlBarDiv);
-  });
-  videojs('controlBarTest').on('loadstart', function(){
-    var myPlayer = this;
-    myPlayer.controlBar.hide();
-  });
-  // Player Ready
-  videojs('controlBarTest').ready(function(){
-    var myPlayer = this;
 
+    // EVENTS
+    myPlayer.on("ended", function(){
+      resetPlayButton();
+    });
+    myPlayer.on("timeupdate", function(){
+      scrubberButton.value = myPlayer.currentTime();
+    });
+    myPlayer.el().addEventListener("click", function(){
+      updatePlayButton();
+    });
+    myPlayer.el().addEventListener("mouseover", function(){
+      controlBarDiv.classList.remove('hide-controlBar');
+    });
+    myPlayer.el().addEventListener("mouseout", function(){
+      controlBarDiv.classList.add('hide-controlBar');
+    });
+    myPlayer.bigPlayButton.el().addEventListener("click", function(){
+      updatePlayButton();
+    });
+  });
+
+  var video = videojs('controlBarTest');
+  // Player Ready
+  video.ready(function(){
+    var myPlayer = this;
     myPlayer.on("loadedmetadata", function(){
       myPlayer.newControls();
     });
-    myPlayer.on("ended", function(){
-      resetPlay(playButton);
-    });
-    myPlayer.on("timeupdate", function(){
-      updateTimer(scrubberButton, myPlayer.currentTime());
-    });
-    // Make controls appear and disappear
-    myPlayer.el().onmouseover = function(){
-      controlBarDiv.classList.remove('hide-controlBar');
-    };
-    myPlayer.el().onmouseout = function(){
-      controlBarDiv.classList.add('hide-controlBar');
-    };
   });
 </script>
