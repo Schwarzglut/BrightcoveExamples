@@ -1,0 +1,28 @@
+<head>
+  <title>Unmute on Hover</title>
+</head>
+<body>
+  <video id="myPlayer"
+    data-video-id="5212494787001"
+    data-account="5212570417001"
+    data-player="Hy7SMibHx"
+    data-embed="default"
+    data-application-id
+    class="video-js"
+    controls
+    width="300"
+    height="150"></video>
+    <script src="//players.brightcove.net/5212570417001/Hy7SMibHx_default/index.min.js"></script><ol class="vjs-playlist"></ol>
+</body>
+<script>
+  videojs.plugin("UnmuteOnHover", function(){
+    //https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsManager
+  });
+  var video = videojs("myPlayer");
+  video.ready(function(){
+    var myPlayer = this;
+    myPlayer.on("loadedmetadata", function(){
+      myPlayer.UnmuteOnHover();
+    });
+  });
+</script>
