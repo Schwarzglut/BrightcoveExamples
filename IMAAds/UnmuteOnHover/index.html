@@ -12,11 +12,22 @@
     controls
     width="300"
     height="150"></video>
-    <script src="//players.brightcove.net/5212570417001/Hy7SMibHx_default/index.min.js"></script><ol class="vjs-playlist"></ol>
+    <script src="//players.brightcove.net/5212570417001/Hy7SMibHx_default/index.min.js"></script>
 </body>
 <script>
   videojs.plugin("UnmuteOnHover", function(){
     //https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsManager
+    var player = this;
+    player.el().addEventListener("mouseover", function(){
+      // Unmute and play IMA Ad
+      player.ima.AdsManager.setVolume(1);
+      player.ima.AdsManager.start();
+    });
+    player.el().addEventListener("mouseout", function(){
+      // Mute and pause IMA Ad
+      player.ima.AdsManager.setVolume(0);
+      player.ima.AdsManager.pause();
+    });
   });
   var video = videojs("myPlayer");
   video.ready(function(){
@@ -24,5 +35,6 @@
     myPlayer.on("loadedmetadata", function(){
       myPlayer.UnmuteOnHover();
     });
+    myPlayer.on("")
   });
 </script>
