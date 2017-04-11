@@ -1,4 +1,3 @@
-<!-- MOUSEEXIT GETS CALLED FROM HOVERING OVER SKIP BUTTON -->
 <head>
   <title>Unmute on Hover</title>
 </head>
@@ -20,8 +19,6 @@
     //https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsManager
     var player = this;
     // Start ads muted.
-    //var UiElementArray = ;
-    //console.log(UiElementArray);
     player.ima3.adsManager.setVolume(0);
     player.ima3.el.addEventListener("mouseenter", function(){
         // Unmute and play IMA Ad
@@ -29,7 +26,7 @@
         // Uncomment below to make Unmute and Play on Hover.
         //player.ima3.adsManager.resume();
     });
-    player.ima3.el.addEventListener("mouseout", function(){
+    player.ima3.el.addEventListener("mouseleave", function(){
       // Mute and pause IMA Ad
       player.ima3.adsManager.setVolume(0);
       // Uncomment below to make Unmute and Play on Hover.
