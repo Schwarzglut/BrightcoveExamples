@@ -15,23 +15,24 @@
     <script src="//players.brightcove.net/5212570417001/Hy7SMibHx_default/index.min.js"></script>
 </body>
 <script>
-  var mouseIn = false;
   videojs.plugin("UnmuteOnHover", function(){
     //https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/apis#ima.AdsManager
     var player = this;
-    player.el().addEventListener("mouseover", function(){
-      if(!mouseIn){
-        mouseIn = true;
+    // Start ads muted.
+    //var UiElementArray = ;
+    //console.log(UiElementArray);
+    player.ima3.adsManager.setVolume(0);
+    player.ima3.el.addEventListener("mouseenter", function(){
         // Unmute and play IMA Ad
         player.ima3.adsManager.setVolume(1);
-        player.ima3.adsManager.resume();
-      }
+        // Uncomment below to make Unmute and Play on Hover.
+        //player.ima3.adsManager.resume();
     });
-    player.el().addEventListener("mouseout", function(){
+    player.ima3.el.addEventListener("mouseout", function(){
       // Mute and pause IMA Ad
-      mouseIn = false;
       player.ima3.adsManager.setVolume(0);
-      player.ima3.adsManager.pause();
+      // Uncomment below to make Unmute and Play on Hover.
+      //player.ima3.adsManager.pause();
     });
   });
   var video = videojs("myPlayer");
